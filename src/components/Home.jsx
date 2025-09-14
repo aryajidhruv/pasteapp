@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 import { addToPastes, updateToPastes } from "../redux/pasteSlice";
 import { toast } from "react-hot-toast";
@@ -10,8 +10,25 @@ const Home = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const pasteId = searchParams.get("pasteid");
   const dispatch = useDispatch();
+  const pastes = useSelector((state) => state.paste.pastes);
+
+  // If editing, pre-fill values
+  useEffect(() => {
+    if (pasteId) {
+      const existingPaste = pastes.find((p) => p._id === pasteId);
+      if (existingPaste) {
+        setTitle(existingPaste.title);
+        setValue(existingPaste.content);
+      }
+    }
+  }, [pasteId, pastes]);
 
   function createPaste() {
+    if (!title.trim() || !value.trim()) {
+      toast.error("Title and content cannot be empty");
+      return;
+    }
+
     const paste = {
       title,
       content: value,
@@ -22,11 +39,11 @@ const Home = () => {
     if (pasteId) {
       // UPDATE
       dispatch(updateToPastes(paste));
-      toast.success("Paste updated successfully");
+      toast.success("✅ Paste updated successfully");
     } else {
       // CREATE
       dispatch(addToPastes(paste));
-      toast.success("Paste created successfully");
+      toast.success("✅ Paste created successfully");
     }
 
     setTitle("");
@@ -35,13 +52,13 @@ const Home = () => {
   }
 
   return (
-    <div className="flex flex-col gap-6 p-6">
+    <div className="max-w-3xl mx-auto p-4 sm:p-6 flex flex-col gap-6">
       {/* Title Input + Button Row */}
-      <div className="flex flex-row gap-4 items-center">
+      <div className="flex flex-col sm:flex-row gap-4 items-stretch sm:items-center">
         <input
           id="title"
           name="title"
-          className="p-2 rounded-lg border border-gray-300 w-64 focus:outline-none focus:ring-1 focus:ring-gray-400"
+          className="flex-1 p-2 sm:p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-1 focus:ring-gray-400"
           type="text"
           placeholder="Enter title here"
           value={title}
@@ -51,7 +68,7 @@ const Home = () => {
         <button
           onClick={createPaste}
           type="button"
-          className="px-4 py-2 rounded-lg border border-gray-400 hover:bg-gray-100 transition"
+          className="px-4 py-2 sm:px-6 sm:py-2 rounded-lg border border-gray-400 hover:bg-gray-100 transition font-medium"
         >
           {pasteId ? "Update My Paste" : "Create My Paste"}
         </button>
@@ -63,7 +80,7 @@ const Home = () => {
         placeholder="Enter content here"
         onChange={(e) => setValue(e.target.value)}
         rows={12}
-        className="w-full h-[400px] p-3 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-1 focus:ring-gray-400"
+        className="w-full min-h-[300px] sm:min-h-[400px] p-3 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-1 focus:ring-gray-400 text-sm sm:text-base"
       />
     </div>
   );

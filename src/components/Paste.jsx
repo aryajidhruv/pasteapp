@@ -32,10 +32,10 @@ const Paste = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6">
+    <div className="max-w-4xl mx-auto p-4 sm:p-6">
       {/* Search Bar */}
       <input
-        className="w-full p-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-1 focus:ring-gray-400 mb-6"
+        className="w-full p-2 sm:p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-1 focus:ring-gray-400 mb-6"
         type="search"
         placeholder="Search pastes..."
         value={searchTerm}
@@ -44,65 +44,67 @@ const Paste = () => {
 
       {/* Show filtered results */}
       {filterData.length > 0 ? (
-        filterData.map((paste) => (
-          <div
-            key={paste._id}
-            className="border border-gray-300 rounded-lg p-4 mb-4  shadow-sm hover:shadow-md transition"
-          >
-            {/* Title */}
-            <h2 className="font-semibold text-lg text-grey-1200 mb-2">
-              {paste.title}
-            </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {filterData.map((paste) => (
+            <div
+              key={paste._id}
+              className="border border-gray-300 rounded-lg p-4 shadow-sm hover:shadow-md transition bg-white"
+            >
+              {/* Title */}
+              <h2 className="font-semibold text-lg text-gray-800 mb-2 truncate">
+                {paste.title}
+              </h2>
 
-            {/* Content */}
-            <p className="text-gray-1000text-sm whitespace-pre-line">
-              {paste.content}
-            </p>
+              {/* Content */}
+              <p className="text-gray-700 text-sm whitespace-pre-line line-clamp-3">
+                {paste.content}
+              </p>
 
-            {/* Date */}
-            <p className="text-xs text-gray-400 mt-2">
-              Created: {new Date(paste.createat).toLocaleString()}
-            </p>
+              {/* Date */}
+              <p className="text-xs text-gray-400 mt-2">
+                Created: {new Date(paste.createat).toLocaleString()}
+              </p>
 
-            {/* Buttons Row */}
-            <div className="flex flex-wrap gap-2 mt-4 text-sm">
-              <button
-                onClick={() => navigate(`/?pasteid=${paste._id}`)}
-                className="px-3 py-1 rounded-lg border border-gray-400 hover:bg-gray-100 transition"
-              >
-                Edit
-              </button>
+              {/* Buttons Row */}
+              <div className="flex flex-wrap gap-2 mt-4 text-sm">
+                <button
+                  onClick={() => navigate(`/?pasteid=${paste._id}`)}
+                  className="px-3 py-1 rounded-lg border border-gray-400 hover:bg-gray-100 transition"
+                >
+                  Edit
+                </button>
 
-              <button
-                onClick={() => alert(`Viewing: ${paste.content}`)}
-                className="px-3 py-1 rounded-lg border border-gray-400 hover:bg-gray-100 transition"
-              >
-                View
-              </button>
+                <button
+                  onClick={() => navigate(`/paste/${paste._id}`)}
+                  className="px-3 py-1 rounded-lg border border-gray-400 hover:bg-gray-100 transition"
+                >
+                  View
+                </button>
 
-              <button
-                onClick={() => handleCopy(paste.content)}
-                className="px-3 py-1 rounded-lg border border-gray-400 hover:bg-gray-100 transition"
-              >
-                Copy
-              </button>
+                <button
+                  onClick={() => handleCopy(paste.content)}
+                  className="px-3 py-1 rounded-lg border border-gray-400 hover:bg-gray-100 transition"
+                >
+                  Copy
+                </button>
 
-              <button
-                onClick={() => dispatch(removeFromPastes(paste._id))}
-                className="px-3 py-1 rounded-lg border border-gray-400 text-red-600 hover:bg-gray-100 transition"
-              >
-                Delete
-              </button>
+                <button
+                  onClick={() => dispatch(removeFromPastes(paste._id))}
+                  className="px-3 py-1 rounded-lg border border-gray-400 text-red-600 hover:bg-gray-100 transition"
+                >
+                  Delete
+                </button>
 
-              <button
-                onClick={() => handleShare(paste)}
-                className="px-3 py-1 rounded-lg border border-gray-400 hover:bg-gray-100 transition"
-              >
-                Share
-              </button>
+                <button
+                  onClick={() => handleShare(paste)}
+                  className="px-3 py-1 rounded-lg border border-gray-400 hover:bg-gray-100 transition"
+                >
+                  Share
+                </button>
+              </div>
             </div>
-          </div>
-        ))
+          ))}
+        </div>
       ) : (
         <p className="text-center text-gray-500">
           No pastes found. Try creating one!
