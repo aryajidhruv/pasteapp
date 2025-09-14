@@ -67,15 +67,17 @@ const Paste = () => {
 
               {/* Buttons Row */}
               <div className="flex flex-wrap gap-2 mt-4 text-sm">
+                {/* ✅ Edit Route */}
                 <button
-                  onClick={() => navigate(`/?pasteid=${paste._id}`)}
+                  onClick={() => navigate(`/pastes/edit/${paste._id}`)}
                   className="px-3 py-1 rounded-lg border border-gray-400 hover:bg-gray-100 transition"
                 >
                   Edit
                 </button>
 
+                {/* ✅ View Route */}
                 <button
-                  onClick={() => navigate(`/paste/${paste._id}`)}
+                  onClick={() => navigate(`/pastes/${paste._id}`)}
                   className="px-3 py-1 rounded-lg border border-gray-400 hover:bg-gray-100 transition"
                 >
                   View
